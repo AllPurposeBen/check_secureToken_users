@@ -1,5 +1,5 @@
 # A Watchman Monitoring Plugin for reporting on user account secure token status
-##Purpose
+## Purpose
 
 This plugin will list user accounts, on applicable systems, that are missing a secure token. This is helpful to find users that may have been created programmatically by various methods and wouldn't have received a secure token, thus preventing them from be able to unlock FileVault 2 encrypted disks.
 
@@ -7,7 +7,7 @@ We look for any user account with a UID over 500. If users without tokens are fo
 
 Applicable systems are any install of macOS on an APFS filesystem. Since secure token only applies to APFS and FileVault 2, we don't even run the plugin on HFS+ systems. In the event of a system getting upgraded and thus conversion to APFS, the plugin will start running.
 
-##Parts
+## Parts
 3 files make up this plugin's components:
 
 * `check_secureToken_users.plugin` The actual plugin code. Written in bash. This lives in `.../Plugins/` folder.
