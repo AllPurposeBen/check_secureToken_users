@@ -29,9 +29,9 @@ Or via CLI with:
 ## Deployment
 This may be avaialble for automatic deployment for your wM subdomain in the (someday) WM Plugin Market Place but could be had by requesting from WM Support in the mean time.
 
-If you'd like to deploy it yourself, you can package up the above components for whatever method you like (I use munki-pkg) or use this pre-built installer pkg.
+If you'd like to deploy it yourself, you can package up the above components for whatever method you like (I use munki-pkg) or use the pre-built installer pkg on the releases page.
 
-If you package your own, you could set your localadmin user setting very easily at deployment time.
+If you package your own, you could set your localadmin user setting very easily at deployment time in pkg or easily as a munki post-install.
 
 ### Thanks
 Please feel free to submit issues as you find them and PR's for improvments, if you're so inclined. 
