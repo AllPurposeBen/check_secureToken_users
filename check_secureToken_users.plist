@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PluginName</key>
+	<string>Secure Token Users</string>
+	<key>PluginUUID</key>
+	<string>2da4d227-5764-4c18-982b-b3d2be8a60b6</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>check_secureToken_users.plugin</string>
+	</array>
+	<key>PluginOptions</key>
+	<array>
+		<dict>
+			<key>SettingStorageKey</key>
+			<string>.</string>
+			<key>SettingStoragePath</key>
+			<string>/Library/MonitoringClient/PluginSupport/check_secureToken_users_settings.plist</string>
+			<key>SettingTitle</key>
+			<string>Enter the shortname of the local admin user you want an alert (not a warning) for when they don't have a secure token. Leave blank to not use this feature.</string>
+			<key>SettingTitleHint</key>
+			<string></string>
+			<key>SettingType</key>
+			<dict>
+				<key>Type</key>
+				<string>DisplayOnly</string>
+				<key>Value</key>
+				<string></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>SettingStorageKey</key>
+			<string>specifiedUser</string>
+			<key>SettingStoragePath</key>
+			<string>/Library/MonitoringClient/PluginSupport/check_secureToken_users_settings.plist</string>
+			<key>SettingTitle</key>
+			<string>localadmin User Account name</string>
+			<key>SettingTitleHint</key>
+			<string>User shortname</string>
+			<key>SettingType</key>
+			<dict>
+				<key>Type</key>
+				<string>UsernameField</string>
+				<key>Value</key>
+				<string>256</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

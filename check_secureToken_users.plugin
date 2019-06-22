@@ -1,0 +1,76 @@
+#!/bin/bash
+
+#### Plugin checks for user accounts >= 500 to have a secure token. 
+## Alerts when no users have a token
+## Warns when any user is found without one
+## Also alerts if a specified user account doesn't have one (like the localadmin
+
+
+## Vars
+settingsPlist="/Library/MonitoringClient/PluginSupport/check_secureToken_users_settings.plist"
+if [[ -f "$settingsPlist" ]]; then
+	specifiedUser=$(/usr/libexec/PlistBuddy -c "print :specifiedUser" "$settingsPlist" 2>/dev/null)
+fi
+tmpfilePath="/tmp/wm_tokenCheck_$(date +%s)"
+bootdiskType=$(diskutil info / | grep 'File System Personality:' | awk -F ':' '{print $NF}' | xargs)
+exCode=0  # set a default exit code
+
+## Sanity check, do we even care if this is disk isn't APFS?
+if [[ "$bootdiskType" != 'APFS' ]]; then
+	exit 25
+fi
+
+## Functions
+# check a user account for token
+checkForToken () {
+	local username="$1"
+	local checkResult=$(sysadminctl -secureTokenStatus $username 2>&1)
+	if grep 'DISABLED' <<< "$checkResult" > /dev/null; then
+		#is disabled
+		echo $username >> "$tmpfilePath"
+		return 0
+	else
+		return 1
+	fi
+}
+
+## Get list of users over 500 UID to check
+over500list=$(dscacheutil -q user | grep -B 2 -e uid:\ 5'[0-9][0-9]' | grep ^'name: ' | awk -F ': ' '{print $NF}')
+
+## Check users for tokens
+# lets get our one off, if we have one
+if [[ -n $specifiedUser ]]; then
+	checkForToken $specifiedUser
+	if [[ $? -eq 0 ]]; then
+		# specified user doesn't have a token, lets remember that
+		specifiedIsTokenless=yes
+	fi
+	# remove this user from the list so it's not run twice (our special user may me < 500 UID)
+	over500list=$(grep -v $specifiedUser <<< "$over500list")
+fi
+
+# run the list
+for thisUser in $(echo $over500list); do
+	checkForToken $thisUser
+done
+
+## Decide if we need to alert
+if [[ -f "$tmpfilePath" ]]; then
+	echo "Users without a secure token:"
+	cat "$tmpfilePath"
+	exCode=20
+	# do we need to call out the special user?
+	if [[ $specifiedIsTokenless == 'yes' ]]; then
+		# our specified user is tokenless, alert
+		exCode=2
+	fi
+else
+	# none is tokenless, yay
+	echo "All users have secure tokens."
+	exCode=0
+fi
+
+# clean up our file
+rm "$tmpfilePath" 2>/dev/null
+
+exit $exCode
